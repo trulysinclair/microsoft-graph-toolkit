@@ -1,7 +1,15 @@
-import { ErrorBar, FluentThemeProvider, MessageThread, SendBox, MessageThreadStyles } from '@azure/communication-react';
+import {
+  ErrorBar,
+  FluentThemeProvider,
+  MessageThread,
+  SendBox,
+  MessageThreadStyles,
+  MentionLookupOptions,
+  Mention
+} from '@azure/communication-react';
 import { FluentTheme, MessageBarType } from '@fluentui/react';
 import { FluentProvider, makeStyles, shorthands, webLightTheme } from '@fluentui/react-components';
-import { Person, PersonCardInteraction, Spinner } from '@microsoft/mgt-react';
+import { MgtTemplateProps, Person, PersonCardInteraction, Spinner, ViewType } from '@microsoft/mgt-react';
 import React, { useEffect, useState } from 'react';
 import { StatefulGraphChatClient } from '../../statefulClient/StatefulGraphChatClient';
 import { useGraphChatClient } from '../../statefulClient/useGraphChatClient';
@@ -10,6 +18,9 @@ import ChatMessageBar from '../ChatMessageBar/ChatMessageBar';
 import { renderMGTMention } from '../../utils/mentions';
 import { registerAppIcons } from '../styles/registerIcons';
 import { ChatHeader } from '../ChatHeader/ChatHeader';
+import { findUsers } from '@microsoft/mgt-components';
+import { graph } from '../../utils/graph';
+import { User } from '@microsoft/microsoft-graph-types';
 
 registerAppIcons();
 
@@ -84,6 +95,32 @@ const messageThreadStyles: MessageThreadStyles = {
     }
   }
 };
+const onSuggestionSelectedCb = (suggested: Mention) => {
+  console.log('suggestion selected ', suggested);
+  return;
+};
+const mentionLookupOptions: MentionLookupOptions = {
+  onQueryUpdated: (query: string): Promise<Mention[]> => {
+    const getUsers = async (): Promise<Mention[]> => {
+      const mentions: Mention[] = [];
+      const users: User[] = await findUsers(graph('mgt-chat'), query);
+      if (users) {
+        users.forEach(user =>
+          mentions.push({ id: user?.id ?? '', displayText: user?.displayName ?? user?.givenName ?? '' })
+        );
+      }
+      return Promise.resolve(mentions);
+    };
+    // NOTE: filter only people in the chat?
+    return getUsers();
+  },
+  onRenderSuggestionItem: (suggestion: Mention, onSuggestionSelected = onSuggestionSelectedCb): JSX.Element => {
+    console.log('suggestion ', suggestion);
+    console.log('selected ', onSuggestionSelected);
+    // NOTE: how do I override the onSuggestionSelected callback
+    return <Person userId={suggestion?.id} view={ViewType.oneline} onClick={() => onSuggestionSelected}></Person>;
+  }
+};
 
 export const Chat = ({ chatId }: IMgtChatProps) => {
   const styles = useStyles();
@@ -143,7 +180,7 @@ export const Chat = ({ chatId }: IMgtChatProps) => {
                 />
               </div>
               <div className={styles.chatInput}>
-                <SendBox onSendMessage={chatState.onSendMessage} />
+                <SendBox mentionLookupOptions={mentionLookupOptions} onSendMessage={chatState.onSendMessage} />
               </div>
               <ErrorBar activeErrorMessages={chatState.activeErrorMessages} />
             </>
