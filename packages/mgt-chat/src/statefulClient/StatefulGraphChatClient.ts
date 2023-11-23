@@ -9,7 +9,6 @@ import {
   ChatMessage as AcsChatMessage,
   ContentSystemMessage,
   ErrorBarProps,
-  Mention,
   Message,
   MessageThreadProps,
   SendBoxProps,
@@ -31,16 +30,19 @@ import {
   Chat,
   ChatMessage,
   ChatMessageAttachment,
+  ChatMessageMention,
   ChatRenamedEventMessageDetail,
   MembersAddedEventMessageDetail,
   MembersDeletedEventMessageDetail,
-  ChatMessageMention,
   NullableOption
 } from '@microsoft/microsoft-graph-types';
 import { produce } from 'immer';
 import { v4 as uuid } from 'uuid';
 import { currentUserId, currentUserName } from '../utils/currentUser';
 import { graph } from '../utils/graph';
+import { rewriteEmojiContent } from '../utils/rewriteEmojiContent';
+import { isChatMessage } from '../utils/types';
+import { updateMessageContentWithImage } from '../utils/updateMessageContentWithImage';
 import { MessageCache } from './Caching/MessageCache';
 import { GraphConfig } from './GraphConfig';
 import { GraphNotificationClient } from './GraphNotificationClient';
@@ -59,9 +61,6 @@ import {
   updateChatMessage,
   updateChatTopic
 } from './graph.chat';
-import { updateMessageContentWithImage } from '../utils/updateMessageContentWithImage';
-import { isChatMessage } from '../utils/types';
-import { rewriteEmojiContent } from '../utils/rewriteEmojiContent';
 
 // 1x1 grey pixel
 const placeholderImageContent =
@@ -122,7 +121,6 @@ export type GraphChatClient = Pick<
     onAddChatMembers: (userIds: string[], history?: Date) => Promise<void>;
     onRemoveChatMember: (membershipId: string) => Promise<void>;
     onRenameChat: (topic: string | null) => Promise<void>;
-    onSuggestionSelected: (suggestion: Mention) => void;
     mentions: NullableOption<ChatMessageMention[]>;
   };
 
@@ -269,10 +267,6 @@ class StatefulGraphChatClient implements StatefulClient<GraphChatClient> {
   public getState(): GraphChatClient {
     return this._state;
   }
-
-  public onSuggestionSelected = (suggestion: Mention): void => {
-    console.log('onSuggestionSelected ', suggestion);
-  };
 
   /**
    * Update the state of the client when the Login state changes
@@ -1197,7 +1191,6 @@ detail: ${JSON.stringify(eventDetail)}`);
     onAddChatMembers: this.addChatMembers,
     onRemoveChatMember: this.removeChatMember,
     onRenameChat: this.renameChat,
-    onSuggestionSelected: this.onSuggestionSelected,
     activeErrorMessages: [],
     chat: this._chat
   };
