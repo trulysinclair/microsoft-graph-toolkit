@@ -26,7 +26,6 @@ export const renderMGTMention = (chatState: GraphChatClient) => {
         </Person>
       );
     }
-    console.log('tried rendering ', mention);
     return render;
   };
 };
