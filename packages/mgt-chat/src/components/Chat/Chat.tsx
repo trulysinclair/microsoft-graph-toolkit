@@ -80,13 +80,13 @@ const messageThreadStyles: MessageThreadStyles = {
     }
   },
   chatMessageContainer: {
-    '& p>mgt-person,msft-mention': {
+    '& p>mgt-person,msft-mention,div>mgt-person': {
       display: 'inline-block',
       ...shorthands.marginInline('0px', '2px')
     }
   },
   myChatMessageContainer: {
-    '& p>mgt-person,msft-mention': {
+    '& p>mgt-person,msft-mention,div>mgt-person': {
       display: 'inline-block',
       ...shorthands.marginInline('0px', '2px')
     }
