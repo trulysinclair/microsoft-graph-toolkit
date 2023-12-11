@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/microsoftgraph/microsoft-graph-toolkit/compare/v3.1.3...v4.0.0) (2023-12-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* mgt-tasks has been removed and replaced with mgt-planner. mgt-planner does not support data-source switching to fetch data from the outlook tasks apis any longer.
+* Developers must explicitly call the register function for all web components used in their application when using components from `@microsoft/mgt-components`. Importing from the root of `@microsoft/mgt-components` no longer has an automatic registration side effect. **NOTE** Components from `@microsoft/mgt-react` will automatically register the underlying web component when they are used for the first time.
+* MgtPersonCard no longer has a static config property.This config has been moved to the MgtPersonCardConfig class to allow developers to import the config and associated getMgtPersonCardScopes function at the top level of their applicaiton without automatically adding the weight of the full mgt-person-card component and dependencies to the entry file for their applications.
+* default behavior of mgt-people-picker changes so presence is not shown unless show-presence attribute or showPresence property are set
+* applications importing `@microsoft/mgt-react` but not using the wrapper components will not have components automatically registered in the browser. This leads to a breaking change when these applications emit raw web component markup rather than using the wrapper components.
+
+### Features
+
+* add edit funtionality to mgt-todo ([#2783](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2783)) ([64acd1f](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/64acd1f19830f29a4557bbbf8f673d5acdf6db96))
+* add show-presence to mgt-people-picker ([#2812](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2812)) ([f5bf7cc](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/f5bf7cc86467de270b059e340c0cf0f4d29af8e4))
+* automatically convert disambiguation value to lowercase ([#2898](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2898)) ([992ab85](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/992ab853f5cf1fbbb931c84f65ed81bf3114f2af))
+* enable live code inclusion for consuming applications ([#2642](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2642)) ([c41d719](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/c41d7190f771513583deac46e5c57fdf17575d81))
+* enable user sign-in for storybook ([#2851](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2851)) ([335c2f3](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/335c2f364768ee7b234bf6da395ad34fd01a8974))
+* promoting search components to GA ([#2909](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2909)) ([86697f4](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/86697f4b44df064af9a472d7cb69cb68c5ffe9d5))
+* rename mgt-tasks to mgt-planner ([#2890](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2890)) ([df8af8c](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/df8af8ce72ef98b98f56d88792c446c91d6cc1d9))
+* require explicit component registration ([#2848](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2848)) ([b7db262](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/b7db262a77389717c449ef8d4c12343860dd9cb6))
+* split config and permission methods out of mgt-person-card ([#2840](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2840)) ([8177699](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/8177699b48081cb330a1cf27683ff99bfb4fa096))
+
+
+### Bug Fixes
+
+* add connect img and frame csp directives ([#2910](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2910)) ([20eb7fc](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/20eb7fc475f58c175d4b4946a786ed827067514d))
+* add method to clear selected channel in mgt-teams-channel-picker ([#2865](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2865)) ([c3a3d82](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/c3a3d821b5ef85cde1926ac6fe268217547fd6c4))
+* correct filter concatenation in mgt-people-picker ([#2822](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2822)) ([18925a9](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/18925a9d80f07e0c27e1d3a715d8fc099bacbd2c))
+* enable the input control when selectedPeople is cleared via code. ([#2792](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2792)) ([f54dc81](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/f54dc81fea4d371e133d297e170bfc800f567981))
+* ensure filtering of tasks actually works ([#2894](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2894)) ([59cccb0](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/59cccb0419ee04b64d35629692a87437db563c01))
+* ensure people-filters are added with and clause for people-picker ([#2826](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2826)) ([0d671e6](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/0d671e6da32473c860daf9ff23a7ddfc43ae72e0))
+* flyout vertical positioning ([#2771](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2771)) ([45163ed](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/45163ed2dfe6260a220cd9cb7a6531958abc18fe))
+* mgt-person avatar size customization in vertical layout ([#2875](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2875)) ([4c41534](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/4c415342785c4409e6b7a0ba1f0430baed5afcd1))
+* presence fallback logic ([#2849](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2849)) ([1ab1970](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/1ab19706f3d7e5a31c81ab9bbead8f6c90e82373))
+* presence icons for dark forced colors ([#2817](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2817)) ([00b168b](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/00b168bfe5fee257b2dee0056e1c4758630cb95a))
+* register components for use in stories ([335c2f3](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/335c2f364768ee7b234bf6da395ad34fd01a8974))
+* revert csp tag in developer index.html ([#2910](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2910)) ([20eb7fc](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/20eb7fc475f58c175d4b4946a786ed827067514d))
+* stop keydown from bubbling beyond people-picker ([#2892](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2892)) ([ad4cfa3](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/ad4cfa38187b2c9f3b4f467267e507ecea273eed))
+* update person details when mgt-person attributes are changed ([#2871](https://github.com/microsoftgraph/microsoft-graph-toolkit/issues/2871)) ([9c53cbf](https://github.com/microsoftgraph/microsoft-graph-toolkit/commit/9c53cbf02cd455d6fb94e831c2ed7bd5e588b4c8))
+
 ## [3.1.3](https://github.com/microsoftgraph/microsoft-graph-toolkit/compare/v3.1.2...v3.1.3) (2023-10-06)
 
 
